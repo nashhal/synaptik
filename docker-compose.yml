@@ -1,0 +1,29 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: synaptik
+      POSTGRES_USER: synaptik
+      POSTGRES_PASSWORD: synaptik
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  api:
+    build: ./apps/api
+    environment:
+      DATABASE_URL: postgresql+psycopg://synaptik:synaptik@db:5432/synaptik
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  web:
+    build: ./apps/web
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1/query
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+volumes:
+  postgres_data:
