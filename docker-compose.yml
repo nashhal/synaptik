@@ -13,6 +13,7 @@ services:
     build: ./apps/api
     environment:
       DATABASE_URL: postgresql+psycopg://synaptik:synaptik@db:5432/synaptik
+      TOKEN_SECRET: ${TOKEN_SECRET:-dev-only-change-this-secret}
     ports:
       - "8000:8000"
     depends_on:
@@ -20,7 +21,7 @@ services:
   web:
     build: ./apps/web
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1/query
+      NEXT_PUBLIC_API_BASE: http://localhost:8000
     ports:
       - "3000:3000"
     depends_on:
